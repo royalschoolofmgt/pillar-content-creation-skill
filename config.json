@@ -2,9 +2,13 @@
   "agent_browser": {
     "cdp": "",
     "cdp_http": "https://chrome-cdp.vortexiq.ai",
-    "keyword_planner_url": "",
+    "keyword_planner_url": "https://ads.google.com/aw/keywordplanner/home?authuser=1&__c=6088932237&uscid=7937773813",
+    "keyword_planner_ideas_url": "https://ads.google.com/aw/keywordplanner/ideas/keywords?authuser=1&__c=6088932237&uscid=7937773813",
+    "keyword_planner_authuser": "1",
+    "keyword_planner_customer_id": "7937773813",
+    "keyword_planner_account_id": "6088932237",
     "usage": "agent-browser --cdp \"$AGENT_BROWSER_CDP\" open --new-tab \"<URL>\"",
-    "notes": "cdp_http is constant. Derive the live WebSocket URL at session start: curl -s https://chrome-cdp.vortexiq.ai/json/version | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d['webSocketDebuggerUrl'].replace('ws://localhost','wss://chrome-cdp.vortexiq.ai'))\". Store result in cdp field and AGENT_BROWSER_CDP env var. Always use --cdp flag to connect. Use --new-tab for opening URLs."
+    "notes": "cdp_http is constant. Derive the live WebSocket URL at session start: curl -s https://chrome-cdp.vortexiq.ai/json/version | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d['webSocketDebuggerUrl'].replace('ws://localhost','wss://chrome-cdp.vortexiq.ai'))\". Store result in cdp field and AGENT_BROWSER_CDP env var. Always use --cdp flag to connect. Use --new-tab for opening URLs. keyword_planner_url is the home page for access verification. keyword_planner_ideas_url is the active research URL used during batch runs."
   },
   "brand_name": "",
   "website_url": "",
