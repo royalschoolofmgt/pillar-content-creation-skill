@@ -10,97 +10,53 @@ import csv
 import os
 import math
 import re
+import json
 from collections import defaultdict
 
 BATCHES_DIR = "batches"
 OUTPUT_DIR = "."
 
-# Batch source mapping
+# Target geography for output rows — read from config.json target_markets[0]
+try:
+    GEO = (json.load(open("../config.json")).get("target_markets") or ["United States"])[0]
+except Exception:
+    GEO = "United States"
+
+# Map each batch CSV filename to its KP source (brand/competitor URL). Replace with this run's batches.
 KP_BATCHES = {
-    "batch1-onepoundeliquid.csv": "KP:onepoundeliquid.com",
-    "batch1-ukvapeworld.csv": "KP:ukvapeworld.co.uk",
-    "batch2-ecigone.csv": "KP:ecigone.co.uk",
-    "batch2-vapeclub.csv": "KP:vapeclub.co.uk",
-    "batch3-ilovevapour.csv": "KP:ilovevapour.com",
-    "batch3-vapestore.csv": "KP:vapestore.co.uk",
-    "batch4-evapo.csv": "KP:evapo.co.uk",
-    "batch4-vapeuk.csv": "KP:vapeuk.co.uk",
-    "batch5-ecigarettedirect.csv": "KP:ecigarettedirect.co.uk",
-    "batch5-vaping360.csv": "KP:vaping360.com",
-    "batch6-avalanche.csv": "KP:avalanche-vapes.co.uk",
-    "batch6-totallywicked.csv": "KP:totallywicked.co.uk",
+    "batch1-<competitor1>.csv": "KP:<competitor1-domain>",
+    "batch2-<competitor2>.csv": "KP:<competitor2-domain>",
+    "batch3-<brand>.csv": "KP:<brand-domain>",
 }
 
-# Product categories for Avalanche Vapes relevance scoring
+# Define this brand's product categories and the keyword regexes that map to each.
+# Populate from config.json scope.pillar_definitions / product categories for this run.
 CATEGORY_PATTERNS = {
-    "Disposable Alternatives": [
-        r"disposable", r"prefilled", r"pre.?filled", r"puff", r"bar",
-        r"crystal", r"lost mary", r"elf bar", r"elux", r"hayati",
-        r"ske", r"aroma king", r"al fakher", r"r and m", r"randm",
-        r"angel", r"cliq", r"dojo", r"ace ultra", r"bloody mary",
-    ],
-    "Vape Kits": [
-        r"vape kit", r"pod kit", r"starter kit", r"mod kit", r"advanced kit",
-        r"vaporesso", r"voopoo", r"smok", r"aspire", r"innokin",
-        r"oxva", r"uwell", r"geekvape", r"xros", r"drag", r"xlim",
-        r"luxe", r"caliburn", r"nord", r"rpm", r"pod system",
-        r"mtl", r"dtl", r"sub ohm", r"box mod", r"pen style",
-        r"reusable vape", r"refillable",
-    ],
-    "E-Liquids": [
-        r"e.?liquid", r"e.?juice", r"vape juice", r"vape liquid",
-        r"shortfill", r"short fill", r"50.?50", r"freebase",
-        r"flavour", r"flavor", r"menthol", r"tobacco", r"fruit",
-        r"dessert", r"candy", r"ice", r"ivg", r"vampire vape",
-        r"dinner lady", r"nasty juice", r"riot squad",
-    ],
-    "Nic Salts": [
-        r"nic salt", r"nicotine salt", r"salt nic", r"20mg",
-        r"10mg", r"salt e.?liquid",
-    ],
-    "Pods & Coils": [
-        r"pod", r"coil", r"replacement pod", r"replacement coil",
-        r"mesh coil", r"vape coil", r"atomizer", r"cartridge",
-    ],
-    "Nicotine Pouches": [
-        r"nicotine pouch", r"nic pouch", r"snus", r"nicopod",
-        r"velo", r"zyn", r"zone pouch", r"noat", r"on!",
-        r"oral nicotine",
-    ],
-    "Accessories": [
-        r"battery", r"charger", r"drip tip", r"tank", r"glass",
-        r"case", r"lanyard", r"vape accessories", r"vape phone",
-        r"vending machine",
-    ],
-    "Health & Safety": [
-        r"safe", r"health", r"risk", r"lung", r"cancer", r"popcorn",
-        r"evali", r"side effect", r"harmful", r"danger", r"study",
-        r"worse than smoking", r"better than smoking",
-        r"affect your health", r"nicotine.*system",
-    ],
-    "Regulations & News": [
-        r"ban", r"regulation", r"law", r"legal", r"illegal",
-        r"tax", r"tpd", r"uk gov", r"single use", r"disposable.*ban",
-        r"age", r"under 18",
-    ],
-    "Quit Smoking / Switching": [
-        r"quit", r"stop smoking", r"switch", r"give up", r"cold turkey",
-        r"nrt", r"nicotine replacement", r"quit vaping", r"breev",
-        r"vaping vs smoking", r"e cigarette vs",
-    ],
+    "Category 1": [r"<regex>", r"<regex>"],
+    "Category 2": [r"<regex>"],
+    "Category 3": [r"<regex>"],
+    # Keep these helper buckets — they feed the relevance bonus in score_keyword().
     "Educational": [
         r"what is", r"how to", r"guide", r"beginner", r"explained",
         r"difference between", r"vs ", r"versus", r"comparison",
-        r"best vape", r"top \d", r"review", r"which",
+        r"best ", r"top \d", r"review", r"which",
         r"how long", r"how much", r"how many",
+    ],
+    "Informational": [
+        r"safe", r"health", r"risk", r"side effect", r"study",
+    ],
+    "Regulations & News": [
+        r"ban", r"regulation", r"law", r"legal", r"illegal",
+        r"tax", r"age", r"news",
     ],
     "Wholesale": [
         r"wholesale", r"bulk", r"trade", r"b2b", r"distributor",
     ],
+    # ... add the brand's real categories here
 }
 
 def classify_keyword(kw):
-    """Classify keyword into Avalanche Vapes product category."""
+    """Classify keyword into this brand's product category."""
     kw_lower = kw.lower()
     scores = {}
     for cat, patterns in CATEGORY_PATTERNS.items():
@@ -112,7 +68,7 @@ def classify_keyword(kw):
             scores[cat] = score
     if scores:
         return max(scores, key=scores.get)
-    return "General Vaping"
+    return "General"
 
 def classify_intent(kw):
     """Classify search intent."""
@@ -123,7 +79,7 @@ def classify_intent(kw):
         return "Commercial"
     if any(w in kw_lower for w in ["what is", "how to", "guide", "why", "can you", "is it", "does", "difference", "explain", "safe", "health", "risk", "ban", "law", "regulation"]):
         return "Informational"
-    if any(w in kw_lower for w in ["near me", "login", "website", ".co.uk", "amazon", "argos", "tesco"]):
+    if any(w in kw_lower for w in ["near me", "login", "website", "amazon"]):  # add this market's big retailers/junk terms
         return "Navigational"
     # Default based on keyword structure
     if len(kw_lower.split()) <= 2:
@@ -164,22 +120,23 @@ def score_keyword(volume, comp_index, category, kw):
     # Ease Score (0-30): lower competition = higher score
     ease_score = 30 - (comp_index * 0.3)
 
-    # Relevance Score (0-20): bonus for Avalanche Vapes-relevant terms
+    # Relevance Score (0-20): bonus for this brand's relevant terms
     relevance = 10  # base
     kw_lower = kw.lower()
 
-    # High relevance: core product categories
-    if category in ["Disposable Alternatives", "Vape Kits", "E-Liquids", "Nic Salts", "Pods & Coils", "Nicotine Pouches"]:
+    # High relevance: core product categories (from CATEGORY_PATTERNS)
+    if category in ["Category 1", "Category 2", "Category 3"]:
         relevance += 5
-    # Brands Avalanche Vapes stocks
-    stocked_brands = ["hayati", "crystal", "lost mary", "ske", "aspire", "vaporesso", "voopoo", "smok", "innokin", "ivg", "aroma king", "elux", "al fakher", "oxva", "bloody"]
-    if any(b in kw_lower for b in stocked_brands):
+    # Brands this brand stocks / core product terms. Populate per run.
+    stocked_brands = ["<brand-or-product-term>"]
+    if any(b for b in stocked_brands if b and b in kw_lower):
         relevance += 5
-    # UK-specific terms
-    if "uk" in kw_lower or "united kingdom" in kw_lower:
+    # Market-specific terms (any token from the target market name, e.g. "United States" -> "united"/"states")
+    market_tokens = [t for t in GEO.lower().split() if len(t) > 2]
+    if any(t in kw_lower for t in market_tokens):
         relevance += 3
     # Educational/guide content (content marketing opportunity)
-    if category in ["Educational", "Health & Safety", "Quit Smoking / Switching"]:
+    if category in ["Educational", "Informational"]:
         relevance += 3
     # Regulatory (timely, high-interest)
     if category == "Regulations & News":
@@ -398,7 +355,7 @@ for kw_data in all_keywords.values():
         "bid_low": kw_data["bid_low"],
         "bid_high": kw_data["bid_high"],
         "source": sources_str,
-        "geo": "UK",
+        "geo": GEO,
     })
 
 # Sort by score descending

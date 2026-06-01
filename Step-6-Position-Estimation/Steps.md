@@ -2,7 +2,7 @@
 
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
-**Target Market:** UK
+**Target Market:** {{TARGET_MARKETS}}
 **Tool:** Agent Browser
 **Evidence:** Screenshots saved to this folder for every step
 **Depends on:** Steps 1-5 completed

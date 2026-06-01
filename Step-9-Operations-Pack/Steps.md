@@ -2,7 +2,7 @@
 
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
-**Target Market:** UK
+**Target Market:** {{TARGET_MARKETS}}
 **Tool:** Agent Browser
 **Evidence:** Screenshots saved to this folder for every step
 **Depends on:** Steps 1-8 completed
@@ -58,7 +58,7 @@
   - [ ] Rule 6: Build topical authority fast — complete pillars before moving on
   - [ ] Rule 7: Repurpose everything — Instagram, TikTok, Facebook, newsletter, YouTube
   - [ ] Rule 8: Track and double down — GSC analysis weekly, scale what works
-  - [ ] Rule 9: Target UK first — UK-specific content beats global generic
+  - [ ] Rule 9: Target {{TARGET_MARKETS}} first — market-specific content beats global generic
   - [ ] Rule 10: Speed > perfection — published and good beats unpublished and perfect
 
 ## Phase 3: INDEX Sheet
@@ -84,4 +84,4 @@ After completing all steps, produce:
 
 1. **Sequential execution only** — complete each step before moving to the next
 2. **Practical and actionable** — every checklist item must be something a person can do
-3. **Brand-specific** — rules adapted to {{BRAND_NAME}} and the UK vape market
+3. **Brand-specific** — rules adapted to {{BRAND_NAME}} and its market

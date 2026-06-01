@@ -2,7 +2,7 @@
 # ============================================================
 # share-and-download-csv.sh — Open Sheet tab, make public, download CSV, cleanup
 # Usage: ./scripts/share-and-download-csv.sh <batch-name>
-#   e.g. ./scripts/share-and-download-csv.sh batch3-vapeuk
+#   e.g. ./scripts/share-and-download-csv.sh batch3-<category-name>
 # Reads SHEET_ID and GID from /tmp/kp_sheet_id.txt and /tmp/kp_sheet_gid.txt
 # (written by download-to-sheets.sh)
 # Requires: AGENT_BROWSER_CDP env var, CDP_HTTP_URL env var

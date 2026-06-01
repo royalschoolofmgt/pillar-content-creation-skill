@@ -33,7 +33,7 @@ Three scripts automate the repetitive parts of each batch. All require `AGENT_BR
 
 | Script | What it does | Usage |
 |--------|-------------|-------|
-| `scripts/set-country-uk.sh` | Removes India, adds United Kingdom, clicks Save, verifies | Run after clicking "Discover new keywords" and switching to website tab |
+| `scripts/set-country.sh "{{TARGET_MARKETS}}"` | Sets the Keyword Planner location to the target market from config.json | Run after clicking "Discover new keywords" and switching to website tab |
 | `scripts/download-to-sheets.sh` | Clicks Download → Google Sheets → Download in dialog → waits for "Open sheet" → gets Sheet URL. Writes SHEET_ID/GID to `/tmp/kp_sheet_*.txt` | Run after KP results are showing. Also requires `CDP_HTTP_URL` env var |
 | `scripts/share-and-download-csv.sh <batch-name>` | Opens Sheet in new tab → switches to it → Share → Restricted → Anyone with link → Done → downloads CSV → **cleans up ALL stale tabs** → switches back to KP | Run after `download-to-sheets.sh`. Reads from `/tmp/kp_sheet_*.txt` |
 
@@ -47,16 +47,16 @@ export CDP_HTTP_URL="{{CDP_HTTP_URL}}"              # from config.json agent_bro
 ```bash
 # 1. Navigate to KP, click Discover, switch to Website tab
 # 2. Set country:
-./scripts/set-country-uk.sh
+./scripts/set-country.sh "{{TARGET_MARKETS}}"
 # 3. Enter website URL in textbox, click Get Results, wait for results
 # 4. Screenshot results
 # 5. Download to Sheets + get Sheet URL:
 ./scripts/download-to-sheets.sh
 # 6. Share, download CSV, cleanup:
-./scripts/share-and-download-csv.sh batch3-vapeuk
+./scripts/share-and-download-csv.sh batch3-<category-name>
 ```
 
-**Keyword-based seeds are BLOCKED** for vaping — Google Ads restricts tobacco/nicotine keywords. Use the **"Start with a website"** tab instead, entering brand or competitor URLs. This returns 250-1000+ keyword ideas without restriction.
+**Some verticals restrict keyword-based seeds** (e.g. regulated categories like tobacco/alcohol/health). If keyword seeds are blocked, use the **"Start with a website"** tab instead, entering brand or competitor URLs — this returns 250-1000+ ideas without restriction.
 
 ---
 
@@ -71,10 +71,10 @@ export CDP_HTTP_URL="{{CDP_HTTP_URL}}"              # from config.json agent_bro
 3. **Click "Discover new keywords"** — In snapshot, find button `"Discover new keywords Get keyword ideas..."` and click its ref. This opens the keyword input panel.
 4. **Set locations** — Click `"Locations settings, India"` button. In the dialog:
    - Click `"Remove targeted location, India"` button
-   - `type` (NOT `fill`) `"United Kingdom"` in the `"Enter a location to include"` combobox
-   - Wait 2s, then use JS eval to click the `<span>` with text "United Kingdom" (dropdown options are NOT in accessibility snapshot)
+   - `type` (NOT `fill`) `"<target market from config.json target_markets>"` in the `"Enter a location to include"` combobox
+   - Wait 2s, then use JS eval to click the `<span>` with text "<target market>" (dropdown options are NOT in accessibility snapshot)
    - Click `"Save"` button
-   - Verify button now reads `"Locations settings, United Kingdom"`
+   - Verify button now reads `"Locations settings, <target market>"`
 5. **Enter seed keywords** — Find `textbox "Search input"` ref. For each keyword:
    - `type @ref "keyword text"` (NOT `fill` — fill doesn't trigger chip creation)
    - `press Tab` (NOT Enter, NOT Comma — only Tab creates a chip in KP's Material Design input)
@@ -315,7 +315,7 @@ export CDP_HTTP_URL="{{CDP_HTTP_URL}}"              # from config.json agent_bro
 | Discover new keywords | KP home | `snapshot -i` → `button "Discover new keywords Get keyword ideas..."` |
 | Location settings | Discover panel | `snapshot -i` → `button "Locations settings, India"` |
 | Remove India | Location dialog | `snapshot -i` → `button "Remove targeted location, India"` |
-| Country in dropdown | Location dialog | NOT in snapshot — JS eval: `document.querySelectorAll('span').find(el => el.textContent.trim() === 'United Kingdom')` |
+| Country in dropdown | Location dialog | NOT in snapshot — JS eval: `document.querySelectorAll('span').find(el => el.textContent.trim() === '<target market>')` |
 | Search input | Discover panel | `snapshot -i` → `textbox "Search input"` (ref changes after each chip!) |
 | Get results | Discover panel | `snapshot -i` → `button "Get results"` |
 | Download keyword ideas | KP results | NOT in snapshot — JS eval: `document.querySelectorAll('material-button').find(...)` |
@@ -341,11 +341,11 @@ export CDP_HTTP_URL="{{CDP_HTTP_URL}}"              # from config.json agent_bro
 - **Google Sheets pages are HEAVY** — they freeze CDP connections and timeout on screenshots. Replace the tab (navigate KP tab to Sheet URL) instead of opening new tabs.
 - **Never have multiple Sheets tabs open** — close/replace them to avoid browser memory issues.
 - **Screenshots on Sheets pages** will timeout (`Page.captureScreenshot` fails) — use JPEG format on KP pages only: `--screenshot-format jpeg --screenshot-quality 50`.
-- **Location defaults to India** — must remove India and add UK every time.
+- **Location defaults to India** — must remove India and add the target market (from config.json) every time.
 - **"Open sheet" opens a NEW WINDOW, not a tab** — agent-browser `tab` command won't see it. Use `curl <CDP_HTTP_URL>/json` to find the Sheet URL, then `agent-browser tab new <URL>` to open it in a tab you can switch to.
 - **MUST switch tabs with `agent-browser tab <n>` before interacting** — snapshot/click/Share all silently fail on unfocused tabs. Always `tab <n>` first, then verify with `snapshot`.
 - **MUST close ALL stale tabs after EVERY batch** — use `curl <CDP_HTTP_URL>/json/close/<target_id>` for each non-KP target. Verify clean state before starting next batch. Stale Sheets tabs freeze CDP.
-- **Keyword-based seeds get blocked for vaping** — Google Ads restricts tobacco/nicotine keywords. Use "Start with a website" tab instead, passing the brand or competitor URL. This returns 250-1000+ keyword ideas without restriction.
+- **Some verticals restrict keyword-based seeds** (e.g. regulated categories like tobacco/alcohol/health). If keyword seeds are blocked, use the "Start with a website" tab instead, entering brand or competitor URLs — this returns 250-1000+ ideas without restriction.
 - **Download button ref click opens nav menu instead** — the `Download keyword ideas` button ref overlaps with the nav. Use JS eval with `document.querySelectorAll("material-button")[14].click()` or find by `aria-label`/`textContent` instead.
 - **Google Sheets menuitem ref click fails** — use JS eval: `document.querySelectorAll("material-select-dropdown-item, material-select-item, [role='menuitem']")` and find by textContent.
 - **Google Ads pages timeout on `open`** but still load — verify with snapshot after timeout error.
@@ -357,7 +357,7 @@ export CDP_HTTP_URL="{{CDP_HTTP_URL}}"              # from config.json agent_bro
 
 Run 6 batches across verticals relevant to {{BRAND_NAME}}'s product categories. Each batch:
 - 2-5 seed keywords (focused, not 10 generic ones)
-- Location: UK
+- Location: {{TARGET_MARKETS}}
 - Language: English
 - Export to Google Sheets → download CSV from Sheets
 
@@ -397,7 +397,7 @@ Run 6 batches across verticals relevant to {{BRAND_NAME}}'s product categories. 
 ## Phase 3: Google Trends Analysis
 
 - [ ] **3.1** Compare pillar-level terms on Google Trends
-- [ ] **3.2** Screenshot trend lines for UK
+- [ ] **3.2** Screenshot trend lines for {{TARGET_MARKETS}}
 - [ ] **3.3** Document key findings (dominant terms per market, seasonal patterns)
 - [ ] **3.4** Geographic breakdown by city/region
 - [ ] **3.5** Capture rising queries
@@ -407,7 +407,7 @@ Run 6 batches across verticals relevant to {{BRAND_NAME}}'s product categories. 
 
 - [ ] **4.1** Check priority distribution (Critical / High / Medium)
 - [ ] **4.2** Check volume distribution across bands
-- [ ] **4.3** Check market coverage (UK represented)
+- [ ] **4.3** Check market coverage ({{TARGET_MARKETS}} represented)
 - [ ] **4.4** Check intent mix (Informational + Commercial balanced, Transactional and Navigational covered)
 - [ ] **4.5** Confirm total keyword count meets target
 - [ ] **4.6** Confirm zero duplicates
