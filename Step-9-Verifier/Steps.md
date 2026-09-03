@@ -37,13 +37,19 @@ apply it (Phase 3), then record it as a mutation (Phase 4).
 - [ ] **2.1 Duplicate / near-duplicate titles across pillars** — no two spokes (or a spoke and a hub) may
       share a title or a near-identical one. Re-angle the lower-priority one; if no distinct angle, drop it.
 - [ ] **2.2 Slug collisions** — every `slug` must be unique across all hubs + spokes. Disambiguate duplicates.
-- [ ] **2.3 Keyword drift** — a spoke whose primary keyword no longer matches its assigned pillar's theme
-      moves to the pillar it actually fits (or is dropped if it fits none).
+- [ ] **2.3 Keyword drift & audience fit** — a spoke whose primary keyword / title reads like a DIFFERENT
+      pillar's audience than the one it's assigned to must be **moved to the pillar it actually fits**. If it
+      fits no pillar, or is off the brand's core audience entirely (e.g. a menswear topic in a womenswear
+      plan), **drop it**. This is the "audience mismatch" the merchant sees in the content check — resolve it
+      here so the plan reads as one coherent audience, never flag it after the fact.
 - [ ] **2.4 Orphan keywords** — a cleared keyword (Step 5) that never made it into any spoke: fold it into
       the best-fitting pillar as a spoke, or record why it was intentionally left out.
-- [ ] **2.5 Final cannibalisation re-check** — re-compare every FINAL title against `published-content.json`.
-      This is the last line of defence after Step 8's re-angles: any title that now duplicates a live post's
-      title or intent must be re-angled or dropped here.
+- [ ] **2.5 Final cannibalisation re-check (overlap vs live)** — re-compare every FINAL title against
+      `published-content.json`. Last line of defence after Step 8's re-angles: any title that now duplicates a
+      live post's title or intent must be re-angled or dropped here.
+- [ ] **2.5b Cross-pillar collision** — if the same head/primary keyword anchors spokes in TWO OR MORE
+      pillars, keep the single best-fit one and re-angle or drop the duplicates in the other pillars, so no two
+      pillars compete for the same term. This is the "cross-pillar clash" the merchant sees in the content check.
 - [ ] **2.6 Format / word-band mismatch** — each spoke's `format` must have a `word_count` inside that
       format's band (P 3,500–5,000 · H 1,500–2,500 · E 1,200–2,000 · B 2,000–3,000 · C 1,800–2,800 ·
       RU 2,000–3,500 · L 1,000–1,800 · O 800–1,200 · S 400–700). Fix the word_count (or the format if the
@@ -75,7 +81,7 @@ apply it (Phase 3), then record it as a mutation (Phase 4).
   "summary": { "titles_deduped": 0, "slugs_fixed": 0, "keywords_moved": 0, "orphans_placed": 0,
                "cannibalising_dropped": 0, "format_band_fixed": 0, "pillars_removed": 0, "links_repaired": 0 },
   "mutations": [
-    { "check": "duplicate-title|slug-collision|keyword-drift|orphan-keyword|cannibalisation|format-band|empty-pillar|link",
+    { "check": "duplicate-title|slug-collision|keyword-drift|audience-mismatch|cross-pillar-collision|orphan-keyword|cannibalisation|format-band|empty-pillar|link",
       "severity": "high|warning",
       "topic_id": "t7|u2|<slug>",
       "before": "…", "after": "…",
