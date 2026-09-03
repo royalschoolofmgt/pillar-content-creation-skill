@@ -1,11 +1,11 @@
-# Step 6 — Position Estimation + SERP Feature Analysis: Execution Checklist
+# Step 7 — Position Estimation + SERP Feature Analysis: Execution Checklist
 
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
 **Target Market:** {{TARGET_MARKETS}}
 **Tool:** Agent Browser
 **Evidence:** Screenshots saved to this folder for every step
-**Depends on:** Steps 1-5 completed
+**Depends on:** Steps 1-6 completed (pillars from Step 6)
 
 ---
 

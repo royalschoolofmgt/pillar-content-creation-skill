@@ -1,11 +1,11 @@
-# Step 7 — Content Titles & Linking: Execution Checklist
+# Step 8 — Content Titles & Linking: Execution Checklist
 
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
 **Target Market:** {{TARGET_MARKETS}}
 **Tool:** Agent Browser
 **Evidence:** Screenshots saved to this folder for every step
-**Depends on:** Steps 1-6 completed
+**Depends on:** Steps 1-7 completed
 
 ---
 

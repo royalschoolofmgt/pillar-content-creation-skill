@@ -1,17 +1,22 @@
-# Step 5 — Pillar Architecture: Execution Checklist
+# Step 6 — Pillar Architecture: Execution Checklist
 
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
 **Target Market:** {{TARGET_MARKETS}}
 **Tool:** Agent Browser
 **Evidence:** Screenshots saved to `screenshots/` folder for every step
-**Depends on:** Steps 1-4 completed (especially Step 4 keyword data)
+**Depends on:** Steps 1-5 completed. Cluster from **Step-5-Cannibalisation/`keywords-cleared.csv`** (the
+cannibalisation-pruned set) — fall back to `Step-4-Keyword-Research/shortlisted-keywords.csv` only if
+`keywords-cleared.csv` is absent. Every keyword you cluster here has already cleared the live-blog check in
+Step 5, so pillars can never be built on a page the store already ranks for — no cannibalisation guard is
+needed in this step.
 
 ---
 
 ## Phase 1: Keyword Clustering
 
-- [ ] **1.1** Load master keyword list from Step 4
+- [ ] **1.1** Load the cleared keyword list — `Step-5-Cannibalisation/keywords-cleared.csv` (fallback:
+      `Step-4-Keyword-Research/shortlisted-keywords.csv` if the cleared file is missing)
 - [ ] **1.2** Group keywords by natural topic similarity
 - [ ] **1.3** Identify distinct clusters from the data
 - [ ] **1.4** Calculate total search volume per cluster
@@ -26,23 +31,6 @@
 - [ ] **2.5** Calculate keyword counts per pillar
 - [ ] **2.6** Calculate volumes per pillar
 - [ ] **2.7** Assign all keywords to pillars — update `master-keywords.json` and `.csv`
-
-## Phase 2b: Existing-Content Cannibalisation Guard (run BEFORE finalising pillars)
-
-The store's already-published posts are in `published-content.json` at the pipeline root —
-`{ inventory: [{title, slug, url}], source, count }`. This is the store's live blog. If the file is
-missing or `count` is 0, note that and continue (nothing to guard against). This step exists so the plan
-**complements** the live blog instead of competing with pages the store already ranks for.
-
-- [ ] **2b.1** Load `published-content.json` from the pipeline root
-- [ ] **2b.2** For every pillar AND every spoke, compare its title + target search intent against each live post
-- [ ] **2b.3** If a proposed topic duplicates a live post's title OR its search intent, it **cannibalises** an
-      existing page — re-angle it (clearly different intent/format/audience) or drop it. Never propose a
-      near-duplicate of a page the store already has.
-- [ ] **2b.4** Prefer topics that fill GAPS the live posts do not cover; lean the pillar toward those
-- [ ] **2b.5** Write `dedup-check.json` (in this Step-5 folder) recording, per pillar/spoke:
-      `{ "topic": str, "slug": str, "existing_match": url|null, "relation": "gap-fill"|"complements"|"differentiates"|"dropped-cannibalising", "note": str }`
-- [ ] **2b.6** Confirm zero remaining spokes are near-duplicates of a live post
 
 ## Phase 3: Pillar Validation (via SERP checks)
 
@@ -71,7 +59,6 @@ missing or `count` is 0, note that and continue (nothing to guard against). This
 | File | Description |
 |------|-------------|
 | `pillars.json` | Pillar definitions with name, slug, description, sub-sections, volume, keyword count, top keywords |
-| `dedup-check.json` | Per pillar/spoke comparison against the store's live posts (`published-content.json`): gap-fill / complements / differentiates / dropped-cannibalising |
 | `pillar-summary.md` | Full overview: pillar table, sub-sections, top keywords, framework validation, SERP results |
 | `build-pillars.py` | Python script that classifies keywords, produces pillars.json, updates master-keywords |
 | Updated `master-keywords.json` | Pillar column now filled for all keywords |
@@ -86,8 +73,7 @@ missing or `count` is 0, note that and continue (nothing to guard against). This
 2. **Screenshot everything** — SERP validation for every pillar
 3. **Data-driven only** — every pillar must be justified by keyword volume from Step 4
 4. **No orphan keywords** — every keyword must belong to a pillar
-5. **Minimum 15 spoke keywords** per pillar
-5b. **No cannibalisation of live content** — no pillar or spoke may duplicate the title or search intent of an existing published post (`published-content.json`); re-angle or drop it and record the decision in `dedup-check.json`
+5. **Minimum 15 spoke keywords** per pillar (cannibalisation was already handled in Step 5 — every keyword here is cleared)
 6. **Agent Browser for ALL browsing** — any task that requires visiting a webpage, taking screenshots, clicking, or reading page content MUST use `agent-browser` via the CDP connection. The only exception is fetching `sitemap.xml` files, which can use WebFetch/curl. Never use WebFetch for browsing live pages.
 7. **No parallel agents for CDP tasks** — never run multiple agents in parallel when using agent-browser CDP. Execute browser tasks sequentially, one at a time.
 8. **Clean up tabs at start of every session** — before starting any browsing work, list all open tabs and close stale ones. Only keep the tab you're actively working with.

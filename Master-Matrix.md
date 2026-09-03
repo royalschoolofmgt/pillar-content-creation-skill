@@ -1,6 +1,12 @@
 # SEO Domination Engine — Master Matrix
 
-## 10-Step Architecture Checklist
+## 9-Step Architecture Checklist
+
+> Pipeline order: **1 Brand → 2 Competitor → 3 Gap → (3b Scope) → 4 Keyword → 5 Cannibalisation →
+> 6 Pillar Architecture → 7 Position → 8 Titles & Linking → 9 Verifier.**
+> Cannibalisation runs on the KEYWORD set BEFORE pillars are built, so no pillar is ever built on a page
+> the store already ranks for. The Verifier is the final holistic pass — it re-checks the whole plan and
+> fixes it in place before the deliverables are assembled.
 
 ---
 
@@ -70,30 +76,40 @@
 - [ ] Tag geographic targeting (Geo) per keyword
 - [ ] Assign priority (Critical / High / Medium) per keyword
 - [ ] Map each keyword to a product/service
-- [ ] Assign page type (Pillar / Landing Page / Blog / Comparison / Tutorial / Tool)
-- [ ] Capture Trends Score and CPC Signal
 - [ ] Ensure keyword mix: 30% head, 50% mid-tail, 20% long-tail
-- [ ] Produce Master Keyword List with all columns
+- [ ] Produce Master Keyword List with all columns (+ `shortlisted-keywords.csv`)
 - [ ] Screenshots: KE overlays, Google Trends charts, SERP results
 
 ---
 
-### Step 5 — Pillar Architecture
-> Cluster keywords into 8-12 pillars — backed by actual search volume, not theory
+### Step 5 — Cannibalisation Check (BEFORE pillars)
+> Prune/re-angle keywords that duplicate the store's live blog, so pillars are built only on clear keywords
 
-- [ ] Cluster keywords from Step 4 into natural topic groups
+- [ ] Load `published-content.json` (pipeline root) — the store's live blog; works without a store API
+- [ ] If `store-config.json:has_store_api=true`, supplement with `Step-1-Brand-Discovery/blog-audit.json:live_titles`
+- [ ] Compare every `shortlisted-keywords.csv` keyword against live posts (significant-word overlap)
+- [ ] Classify each: `clear` (keep) / `reangle` (keep with a distinct angle) / `dropped` (near-duplicate, remove)
+- [ ] Write `keywords-cleared.csv` (shortlisted minus dropped, + `cannibalisation` column) — **Step 6 clusters from this**
+- [ ] Write `dedup-check.json` (per-keyword relation + summary header)
+- [ ] Never hard-fail: no live posts → everything `clear`
+
+---
+
+### Step 6 — Pillar Architecture
+> Cluster the CLEARED keywords into 8-12 pillars — backed by actual search volume, not theory
+
+- [ ] Cluster keywords from `Step-5-Cannibalisation/keywords-cleared.csv` (fallback: shortlisted) into topic groups
 - [ ] Define 8-12 pillars with names and URL slugs
 - [ ] Assign keywords to pillars with per-pillar volume totals
 - [ ] Validate each pillar is justified by real search data
 - [ ] Map each pillar to a primary product/service
 - [ ] Define sub-sections within each pillar
 - [ ] Set target keyword count per pillar
-- [ ] Confirm no major keyword clusters are left unassigned
-- [ ] Cannibalisation guard: check every pillar + spoke against `published-content.json` (the store's live posts) — re-angle or drop anything that duplicates a live post's title/intent, and record the decision in `dedup-check.json`
+- [ ] Confirm no major keyword clusters are left unassigned (cannibalisation already handled in Step 5)
 
 ---
 
-### Step 6 — Position Estimation + SERP Feature Analysis
+### Step 7 — Position Estimation + SERP Feature Analysis
 > Current positions from actual SERP checks + what SERP features Google rewards
 
 - [ ] Check actual SERP positions for top 50 keywords via Agent Browser
@@ -103,52 +119,40 @@
 - [ ] Determine optimal content FORMAT based on what Google currently rewards
 - [ ] Assign opportunity gap (Full Opportunity / High / Medium / Close / Holding)
 - [ ] Set action recommendations per position band (Defend / Push / Optimize / Build / New Content)
-- [ ] Build 12-month position tracking template
 - [ ] Screenshots: SERPs for top 50 keywords showing features and rankings
 
 ---
 
-### Step 7 — Content Titles & Linking
+### Step 8 — Content Titles & Linking
 > Titles matched to SERP-validated formats + internal linking map
 
 - [ ] Write pillar page titles (8-12) — comprehensive, 60-80 chars, keyword-rich
 - [ ] Write spoke article titles (15-30 per pillar) — specific, 50-70 chars
 - [ ] Assign URL slugs using pillar-nested structure (/pillar/spoke)
-- [ ] Match content format to SERP feature analysis from Step 6
+- [ ] Match content format to SERP feature analysis from Step 7
 - [ ] Assign primary + secondary keywords per title
 - [ ] Cross-check every title against `published-content.json` — no title may duplicate a live post; link to relevant live posts (`to_live_posts`) instead of recreating them
 - [ ] Set word count targets per content piece
 - [ ] Build internal linking map: spoke → pillar (mandatory)
-- [ ] Build internal linking map: spoke → cross-pillar spokes (2-3 links each)
-- [ ] Build internal linking map: pillar → top spokes (5-10 links each)
-- [ ] Build internal linking map: pillar → cross-pillar (2-3 links each)
+- [ ] Build internal linking map: spoke → relevant live posts / collections / products
 - [ ] Map CTA/conversion page per pillar
 
 ---
 
-### Step 8 — Deployment Calendar
-> Day-by-day publishing schedule with KPI targets
+### Step 9 — Verifier
+> Final holistic pass: re-check the whole plan, fix problems IN PLACE before deliverables are assembled
 
-- [ ] Set deployment speed (War-Time / Standard / Slow)
-- [ ] Define publishing phases with start and end dates
-- [ ] Assign every content piece to a specific publish date
-- [ ] Include all 14 calendar columns (Day, Date, Phase, Title, Type, Pillar, Keyword, URL, Word Count, Must-Haves, CTA, Technical SEO, Status)
-- [ ] Build weekly KPI tracker (13 weeks) with milestone targets
-- [ ] Set targets: Pages Published, Pages Indexed, Impressions, Clicks, Keywords Ranking, Page 1 Keywords, Demo Requests
-
----
-
-### Step 9 — Operations Pack
-> Daily checklist, survival rules, and INDEX sheet
-
-- [ ] Create Daily Content Checklist (5 sections, ~25 items)
-  - [ ] Before Writing: keyword brief, SERP research, asset identification
-  - [ ] Writing: draft, unique intro, screenshots, data points, meta tags, FAQ
-  - [ ] Internal Linking: pillar link, cross-links, CTAs, related articles
-  - [ ] Technical SEO: schema, canonical, hreflang, images, headings
-  - [ ] Publish & Amplify: GSC submission, LinkedIn, communities, newsletter
-- [ ] Define 10 Survival Rules adapted to the brand
-- [ ] Create INDEX sheet (table of contents for all deliverables)
+- [ ] Load the assembled plan (titles-linking + pillar defs + positions + live blog)
+- [ ] Duplicate/near-duplicate titles across pillars — re-angle or drop
+- [ ] Slug collisions — disambiguate
+- [ ] Keyword drift — move a spoke to the pillar it actually fits (or drop)
+- [ ] Orphan keywords — fold cleared-but-unused keywords into the best pillar, or record why not
+- [ ] Final cannibalisation re-check of FINAL titles vs `published-content.json`
+- [ ] Format / word-band mismatch — fix word_count or format
+- [ ] Empty/thin pillars — remove or flag
+- [ ] Linking integrity — repair links broken by this step's edits
+- [ ] Write fixes back into `titles-linking.json` + pillar defs (so `content_map.json` inherits them)
+- [ ] Write `verification.json` UNCONDITIONALLY (clean run → `{status:"clean", mutations:[]}`)
 
 ---
 
@@ -161,8 +165,8 @@
 | 3 | Content Gap Analysis | Not Started | |
 | 3b | Content Scope Estimation | Not Started | |
 | 4 | Keyword Research | Not Started | |
-| 5 | Pillar Architecture | Not Started | |
-| 6 | Position Estimation + SERP Analysis | Not Started | |
-| 7 | Content Titles & Linking | Not Started | |
-| 8 | Deployment Calendar | Not Started | |
-| 9 | Operations Pack | Not Started | |
+| 5 | Cannibalisation Check | Not Started | |
+| 6 | Pillar Architecture | Not Started | |
+| 7 | Position Estimation + SERP Analysis | Not Started | |
+| 8 | Content Titles & Linking | Not Started | |
+| 9 | Verifier | Not Started | |
