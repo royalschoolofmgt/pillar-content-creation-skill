@@ -89,6 +89,7 @@
 - [ ] Define sub-sections within each pillar
 - [ ] Set target keyword count per pillar
 - [ ] Confirm no major keyword clusters are left unassigned
+- [ ] Cannibalisation guard: check every pillar + spoke against `published-content.json` (the store's live posts) — re-angle or drop anything that duplicates a live post's title/intent, and record the decision in `dedup-check.json`
 
 ---
 
@@ -115,6 +116,7 @@
 - [ ] Assign URL slugs using pillar-nested structure (/pillar/spoke)
 - [ ] Match content format to SERP feature analysis from Step 6
 - [ ] Assign primary + secondary keywords per title
+- [ ] Cross-check every title against `published-content.json` — no title may duplicate a live post; link to relevant live posts (`to_live_posts`) instead of recreating them
 - [ ] Set word count targets per content piece
 - [ ] Build internal linking map: spoke → pillar (mandatory)
 - [ ] Build internal linking map: spoke → cross-pillar spokes (2-3 links each)

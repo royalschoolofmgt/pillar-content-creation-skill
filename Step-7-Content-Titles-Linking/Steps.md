@@ -30,6 +30,9 @@
   - [ ] Include brand name in 20-30% of titles
   - [ ] Use power words (Complete, Ultimate, Proven, Step-by-Step)
   - [ ] Match search intent in title structure
+- [ ] **2.7** Cross-check every pillar + spoke title against `published-content.json` (the store's live posts):
+      no title may duplicate the title or search intent of an existing post — re-angle or drop any duplicate
+      so new content never cannibalises a page the store already ranks for
 
 ## Phase 3: SERP Validation of Titles
 
@@ -45,6 +48,9 @@
 - [ ] **4.2** Map every spoke → 2-3 spokes in OTHER pillars (cross-pillar links)
 - [ ] **4.3** Map every pillar → its top 5-10 spokes (downward links)
 - [ ] **4.4** Map every pillar → 2-3 other pillars (cross-pillar links)
+- [ ] **4.4b** Where a spoke genuinely relates to an existing live post (`published-content.json`), link to that
+      live URL — record these as `to_live_posts` in the linking map so new content reinforces the pages the
+      store already has instead of competing with them
 - [ ] **4.5** Assign CTA/conversion page per pillar
 - [ ] **4.6** Verify no orphan pages — every page has at least 3 internal links pointing to it
 
@@ -92,3 +98,4 @@ After completing all steps, produce:
 3. **SERP-validated formats only** — titles must match what Google currently rewards
 4. **No orphan pages** — every page links and is linked to
 5. **JSON + MD output** — create `content-titles.json` and `internal-linking-map.json`, but also render all tables in `content-titles-linking.md`
+6. **Respect live content** — no title may duplicate an existing published post (`published-content.json`); link to relevant live posts (`to_live_posts`) rather than recreating them
