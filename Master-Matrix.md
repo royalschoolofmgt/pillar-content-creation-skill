@@ -99,6 +99,8 @@
 > Cluster the CLEARED keywords into 8-12 pillars — backed by actual search volume, not theory
 
 - [ ] Cluster keywords from `Step-5-Cannibalisation/keywords-cleared.csv` (fallback: shortlisted) into topic groups
+- [ ] Guardrails: drop/re-angle any pillar matching a `config.json:guardrails.never` rule (semantic match)
+- [ ] Seasonality: light tier-nudge only, from `config.json:current_date` — merchant's `content_focus` always wins
 - [ ] Define 8-12 pillars with names and URL slugs
 - [ ] Assign keywords to pillars with per-pillar volume totals
 - [ ] Validate each pillar is justified by real search data
@@ -126,6 +128,8 @@
 ### Step 8 — Content Titles & Linking
 > Titles matched to SERP-validated formats + internal linking map
 
+- [ ] Guardrails: judge every title semantically against `config.json:guardrails.never` before finalizing
+- [ ] Seasonality: `config.json:current_date`-aware framing, never overriding merchant's stated `content_focus`
 - [ ] Write pillar page titles (8-12) — comprehensive, 60-80 chars, keyword-rich
 - [ ] Write spoke article titles (15-30 per pillar) — specific, 50-70 chars
 - [ ] Assign URL slugs using pillar-nested structure (/pillar/spoke)
@@ -148,6 +152,8 @@
 - [ ] Keyword drift — move a spoke to the pillar it actually fits (or drop)
 - [ ] Orphan keywords — fold cleared-but-unused keywords into the best pillar, or record why not
 - [ ] Final cannibalisation re-check of FINAL titles vs `published-content.json`
+- [ ] Cross-pillar collision — same head term in two+ pillars: keep the best-fit one, re-angle/drop the rest
+- [ ] Guardrail violation (last line of defence) — re-check FINAL titles vs `config.json:guardrails.never`
 - [ ] Format / word-band mismatch — fix word_count or format
 - [ ] Empty/thin pillars — remove or flag
 - [ ] Linking integrity — repair links broken by this step's edits

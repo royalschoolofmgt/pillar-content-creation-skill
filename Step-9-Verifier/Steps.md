@@ -50,6 +50,10 @@ apply it (Phase 3), then record it as a mutation (Phase 4).
 - [ ] **2.5b Cross-pillar collision** — if the same head/primary keyword anchors spokes in TWO OR MORE
       pillars, keep the single best-fit one and re-angle or drop the duplicates in the other pillars, so no two
       pillars compete for the same term. This is the "cross-pillar clash" the merchant sees in the content check.
+- [ ] **2.5c Guardrail violation (last line of defence)** — re-check every FINAL title against
+      `config.json:guardrails.never`, same semantic judgment (not literal substring) as Step 8's check. Drop
+      any that violate, regardless of how they got through Step 8 — this catches a rule that changed between
+      Step 8 and now, or anything Step 8 missed.
 - [ ] **2.6 Format / word-band mismatch** — each spoke's `format` must have a `word_count` inside that
       format's band (P 3,500–5,000 · H 1,500–2,500 · E 1,200–2,000 · B 2,000–3,000 · C 1,800–2,800 ·
       RU 2,000–3,500 · L 1,000–1,800 · O 800–1,200 · S 400–700). Fix the word_count (or the format if the
@@ -81,7 +85,7 @@ apply it (Phase 3), then record it as a mutation (Phase 4).
   "summary": { "titles_deduped": 0, "slugs_fixed": 0, "keywords_moved": 0, "orphans_placed": 0,
                "cannibalising_dropped": 0, "format_band_fixed": 0, "pillars_removed": 0, "links_repaired": 0 },
   "mutations": [
-    { "check": "duplicate-title|slug-collision|keyword-drift|audience-mismatch|cross-pillar-collision|orphan-keyword|cannibalisation|format-band|empty-pillar|link",
+    { "check": "duplicate-title|slug-collision|keyword-drift|audience-mismatch|cross-pillar-collision|guardrail-violation|orphan-keyword|cannibalisation|format-band|empty-pillar|link",
       "severity": "high|warning",
       "topic_id": "t7|u2|<slug>",
       "before": "…", "after": "…",

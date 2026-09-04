@@ -9,6 +9,11 @@
 
 ---
 
+## Phase 0: Guardrails & Seasonality (check BEFORE finalizing any title)
+
+- [ ] **0.1 Guardrails.** Read `config.json:guardrails.never`. Before a pillar or spoke title is finalized, judge it against every rule **semantically**, not by literal substring — a rule about "vaping health claims" must also catch a spoke titled "E-Cigarette Health Effects Explained." Never keep a title that violates a rule; drop the underlying keyword entirely rather than reword it into something that still carries the same forbidden intent. Also read `config.json:guardrails.always` and weave those into linking/CTA language naturally, never forced.
+- [ ] **0.2 Seasonality — aware, never overriding.** `config.json:current_date` is the real run date. Be aware of real-world seasonal events near that date when choosing a spoke's angle/timing framing. **Priority rule, absolute: the merchant's `content_focus` and any explicit dates/launches they stated ALWAYS win over inferred seasonality** — seasonal awareness only fills gaps the merchant didn't specify.
+
 ## Phase 1: Pillar Page Titles
 
 - [ ] **1.1** For each pillar (8-12), write a comprehensive title (60-80 chars, includes primary keyword)
@@ -25,8 +30,8 @@
 - [ ] **2.4** Set word count target per spoke based on format
 - [ ] **2.5** Assign primary + secondary keywords per spoke
 - [ ] **2.6** Apply title writing rules:
-  - [ ] Include numbers when possible (10 Ways, 15 Fixes, 2026 Guide)
-  - [ ] Include the year for freshness signal (2026)
+  - [ ] Include numbers when possible (10 Ways, 15 Fixes, "<year> Guide")
+  - [ ] Include the year for freshness signal, taken from `config.json:current_date` (the real run year) — never hardcode a year
   - [ ] Include brand name in 20-30% of titles
   - [ ] Use power words (Complete, Ultimate, Proven, Step-by-Step)
   - [ ] Match search intent in title structure

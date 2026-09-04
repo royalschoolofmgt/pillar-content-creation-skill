@@ -24,6 +24,8 @@ needed in this step.
 
 ## Phase 2: Pillar Definition
 
+- [ ] **2.0 Guardrails.** Read the merchant's Setup guardrails (`config.json:guardrails.never`) before naming/scoping any pillar. Drop or re-angle any pillar whose theme matches a never-write-about rule — judge semantically (a rule about "vaping health claims" also catches an "e-cigarette health effects" pillar), not by literal substring.
+- [ ] **2.0b Seasonality (light touch — full framing happens at Step 8).** `config.json:current_date` is the real run date. A pillar tied to a near-term real-world event relative to that date may reasonably get a tier nudge (see caps below) — but this is a tie-breaker only. **The merchant's `content_focus`/explicit dates always win over inferred seasonality.**
 - [ ] **2.1** Assign pillar names and URL slugs
 - [ ] **2.2** Write 2-3 sentence descriptions per pillar
 - [ ] **2.3** Define sub-sections per pillar
