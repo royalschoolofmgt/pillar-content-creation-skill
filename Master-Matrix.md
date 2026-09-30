@@ -2,7 +2,7 @@
 
 ## 9-Step Architecture Checklist
 
-> Pipeline order: **1 Brand → 2 Competitor → 3 Gap → (3b Scope) → 4 Keyword → 5 Cannibalisation →
+> Pipeline order: **1 Brand → 2 Competitor → 3 Gap → (3b Scope) → (3c Your Files) → 4 Keyword → 5 Cannibalisation →
 > 6 Pillar Architecture → 7 Position → 8 Titles & Linking → 9 Verifier.**
 > Cannibalisation runs on the KEYWORD set BEFORE pillars are built, so no pillar is ever built on a page
 > the store already ranks for. The Verifier is the final holistic pass — it re-checks the whole plan and
@@ -62,6 +62,18 @@
 - [ ] Record final scope: {{SCOPE_PILLARS}} pillars · {{SCOPE_TOTAL_SPOKES}} spokes · {{SCOPE_TOTAL_ARTICLES}} total articles · {{SCOPE_TOTAL_KEYWORDS}} keywords to research
 - [ ] Update config.json → scope object with all final numbers
 - [ ] Screenshots: none required — this is a planning/calculation step
+
+---
+
+### Step 3c — Your Files (only when the merchant attached files)
+> Runs ONLY when the plan was created with files (`sources/INDEX.json` exists). Reads the merchant's files and
+> feeds their products, terms and topics into keyword research and pillar architecture.
+
+- [ ] Read every file in `sources/` in full
+- [ ] Extract products, facts, themes, seed keywords and topic candidates — each naming its file and slide / page
+- [ ] Write `Step-3c-Your-Files/source-insights.json`
+- [ ] Step 4 seeds the merchant's own keywords first; Step 6 places the file-backed topics with `source_refs`
+- [ ] Screenshots: none required
 
 ---
 
@@ -170,6 +182,7 @@
 | 2 | Competitor Discovery | Not Started | |
 | 3 | Content Gap Analysis | Not Started | |
 | 3b | Content Scope Estimation | Not Started | |
+| 3c | Your Files (only with attached files) | Not Started | |
 | 4 | Keyword Research | Not Started | |
 | 5 | Cannibalisation Check | Not Started | |
 | 6 | Pillar Architecture | Not Started | |
