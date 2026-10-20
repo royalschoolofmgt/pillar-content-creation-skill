@@ -3,8 +3,8 @@
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
 **Target Market:** {{TARGET_MARKETS}}
-**Tool:** Agent Browser
-**Evidence:** Screenshots saved to this folder for every step
+**Tool:** the merchant's own Chrome (VortexIQ Browser Agent extension — the `vortexiq-browser` tools)
+**Evidence:** a `shot` filed under this step for every finding (copied into `screenshots/` here)
 **Depends on:** Steps 1-7 completed
 
 ---

@@ -28,7 +28,7 @@
 
 - [ ] Identify top 3 competitors — {{C1_NAME}} (client-provided), {{C2_NAME}}, {{C3_NAME}}
 - [ ] Audit each competitor's blog ({{C1_NAME}} ~{{C1_BLOG_POSTS}}, {{C2_NAME}} ~{{C2_BLOG_POSTS}}, {{C3_NAME}} ~{{C3_BLOG_POSTS}}+ guides)
-- [ ] Identify competitor top-ranking keywords (via Agent Browser + KE)
+- [ ] Identify competitor top-ranking keywords (in the merchant's Chrome)
 - [ ] Analyze competitor strengths (awards, content depth, DA, Trustpilot)
 - [ ] Analyze competitor weaknesses (DA drops, sitemap gaps, outdated content, low traffic)
 - [ ] Document competitor domain authority and backlink profiles — DA {{C1_DA}}/{{C2_DA}}/{{C3_DA}}
@@ -126,7 +126,7 @@
 ### Step 7 — Position Estimation + SERP Feature Analysis
 > Current positions from actual SERP checks + what SERP features Google rewards
 
-- [ ] Check actual SERP positions for top 50 keywords via Agent Browser
+- [ ] Check actual SERP positions for top 50 keywords in the merchant's Chrome
 - [ ] Estimate positions for remaining keywords based on indexed pages
 - [ ] Classify all keywords by position band (P1-3 / P4-10 / P11-20 / P21-50 / 50+ / Not Ranking)
 - [ ] Identify SERP features per keyword (featured snippets, PAA, video, local pack, images)

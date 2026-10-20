@@ -3,7 +3,7 @@
 **Brand:** {{BRAND_NAME}}
 **URL:** {{WEBSITE_URL}}
 **Target Market:** {{TARGET_MARKETS}}
-**Tool:** Agent Browser
+**Tool:** the merchant's own Chrome (VortexIQ Browser Agent extension — the `vortexiq-browser` tools)
 **Evidence:** Screenshots saved to `screenshots/` folder for every step
 **Depends on:** Steps 1-5 completed. Cluster from **Step-5-Cannibalisation/`keywords-cleared.csv`** (the
 cannibalisation-pruned set) — fall back to `Step-4-Keyword-Research/shortlisted-keywords.csv` only if
@@ -76,15 +76,15 @@ needed in this step.
 3. **Data-driven only** — every pillar must be justified by keyword volume from Step 4
 4. **No orphan keywords** — every keyword must belong to a pillar
 5. **Minimum 15 spoke keywords** per pillar (cannibalisation was already handled in Step 5 — every keyword here is cleared)
-6. **Agent Browser for ALL browsing** — any task that requires visiting a webpage, taking screenshots, clicking, or reading page content MUST use `agent-browser` via the CDP connection. The only exception is fetching `sitemap.xml` files, which can use WebFetch/curl. Never use WebFetch for browsing live pages.
-7. **No parallel agents for CDP tasks** — never run multiple agents in parallel when using agent-browser CDP. Execute browser tasks sequentially, one at a time.
-8. **Clean up tabs at start of every session** — before starting any browsing work, list all open tabs and close stale ones. Only keep the tab you're actively working with.
+6. **The merchant's Chrome for ALL browsing** — any task that requires visiting a webpage, taking screenshots, clicking, or reading page content uses the `vortexiq-browser` tools (`open_tab`, `navigate`, `get_text`, `snapshot`, `find`, `click`, `scroll`, and `shot` for every screenshot). The job is read-only: never type, post or submit. The only exception is fetching `sitemap.xml` files, which can use curl. Never use WebFetch, curl or any other browser for live pages.
+7. **One browser call at a time** — browser work is sequential: never parallel agents or parallel calls.
+8. **One tab** — open the job's tab once (`open_tab`) and `navigate` it; open a second only for a side-by-side comparison, and never more than 3.
 
-### Agent Browser Tab Management Reference
+### Browser tab reference (`vortexiq-browser` tools)
 ```
-agent-browser tab                     # List all tabs
-agent-browser tab new [url]           # New tab (optionally with URL)
-agent-browser tab <n>                 # Switch to tab n
-agent-browser tab close [n]           # Close tab n (or current if omitted)
-agent-browser window new              # New browser window
+open_tab   {url}              # a new tab of this job's (returns its tabId)
+navigate   {tabId, url}       # move a tab (allow_site first if the site is new to this job)
+list_tabs                     # this job's tabs only
+close_tab  {tabId}
+shot       {step, caption}    # screenshot as this step's evidence (returns its id + the step's count)
 ```
